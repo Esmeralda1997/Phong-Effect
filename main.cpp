@@ -19,7 +19,6 @@
 #include "Shader.h"
 #include "Camera.h"
 
-
 // Function prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -39,8 +38,8 @@ bool    keys[1024];
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 // Deltatime
-GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
-GLfloat lastFrame = 0.0f;  	// Time of last frame
+GLfloat deltaTime = 0.0f;    // Time between current frame and last frame
+GLfloat lastFrame = 0.0f;      // Time of last frame
 
 // The MAIN function, from here we start the application and run the game loop
 int main()
@@ -68,7 +67,7 @@ int main()
 
     // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
     glewExperimental = GL_TRUE;
-    // Initialize GLEW to setup the OpenGL Function pointers
+    // Initialize GLEW to setup th2be OpenGL Function pointers
     glewInit();
 
     int w,h;
@@ -169,12 +168,29 @@ int main()
 
         // Use cooresponding shader when setting uniforms/drawing objects
         lightingShader.Use();
-		//to do: define several attributes of the objects, such as object color, light color and position, camera matrix and etc.
-		//use function glGetUniformLocation(), and glUniform3f, glUniformMatrix4fv to pass your uniform value
+        //to do: define several attributes of the objects, such as object color, light color and position, camera matrix and etc.
+        //use function glGetUniformLocation(), and glUniform3f, glUniformMatrix4fv to pass your uniform value
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "objectColor"), 1.0f, 0.5f, 0.31f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "lightColor"),  1.0f, 1.0f, 1.0f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "lightPosition"), lightPos.x, lightPos.y, lightPos.z);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "viewPosition"), camera.Position.x, camera.Position.y, camera.Position.y);
+        
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        
+        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-		
-		
-		
+        
+        // Draw the container (using container's vertex attributes)
+        glBindVertexArray(containerVAO);
+        glm::mat4 model = glm::mat4(1.0);
+        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        
+        //Render the cube
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+
 
         // Draw the container (using container's vertex attributes)
         glBindVertexArray(containerVAO);
@@ -240,4 +256,5 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(yoffset);
 }
+ 
 
