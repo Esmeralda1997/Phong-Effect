@@ -29,13 +29,13 @@ void do_movement();
 const GLuint WIDTH = 800, HEIGHT = 600;
 
 // Camera
-Camera  camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera  camera(glm::vec3(1.0f, 0.8f, 3.0f));
 GLfloat lastX  =  WIDTH  / 2.0;
 GLfloat lastY  =  HEIGHT / 2.0;
 bool    keys[1024];
 
 // Light attributes
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 lightPosition(1.0f, 0.5f, 2.0f);
 
 // Deltatime
 GLfloat deltaTime = 0.0f;    // Time between current frame and last frame
@@ -170,12 +170,12 @@ int main()
         lightingShader.Use();
         //to do: define several attributes of the objects, such as object color, light color and position, camera matrix and etc.
         //use function glGetUniformLocation(), and glUniform3f, glUniformMatrix4fv to pass your uniform value
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "objectColor"), 1.0f, 0.5f, 0.31f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "objectColor"), 0.0f,  1.0f,  0.0f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "lightColor"),  1.0f, 1.0f, 1.0f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "lightPosition"), lightPos.x, lightPos.y, lightPos.z);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "viewPosition"), camera.Position.x, camera.Position.y, camera.Position.y);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "lightPosition"), lightPosition.x, lightPosition.y, lightPosition.z);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "viewPosition"), camera.Position.x, camera.Position.y, camera.Position.z);
         
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 1.0f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
@@ -188,12 +188,6 @@ int main()
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         
         //Render the cube
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
-
-
-        // Draw the container (using container's vertex attributes)
-        glBindVertexArray(containerVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
 
