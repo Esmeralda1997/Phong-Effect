@@ -7,7 +7,7 @@ OBJS = main.o
 OS = $(shell uname)
 
 ifeq ($(OS),Darwin)
-	LIB =  -framework OpenGL -framework Cocoa -lGLEW -lglfw3
+	LIB =  -framework OpenGL -framework Cocoa -lGLEW -lglfw
 else
 	LIB =  -lGL -lGLEW -lglfw
 endif
