@@ -1,3 +1,4 @@
+//  Resources: https://learnopengl.com/Lighting/Basic-Lighting
 
 #include <iostream>
 #include <cmath>
