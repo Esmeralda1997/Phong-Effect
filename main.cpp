@@ -28,13 +28,13 @@ void do_movement();
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
 
-// Camera
+// Camera: The camera will be displaced to the right top of the cube
 Camera  camera(glm::vec3(1.0f, 0.8f, 3.0f));
 GLfloat lastX  =  WIDTH  / 2.0;
 GLfloat lastY  =  HEIGHT / 2.0;
 bool    keys[1024];
 
-// Light attributes
+// Light attributes: The light will be at the top right of the cube
 glm::vec3 lightPosition(1.0f, 0.5f, 2.0f);
 
 // Deltatime
@@ -170,18 +170,18 @@ int main()
         lightingShader.Use();
         //to do: define several attributes of the objects, such as object color, light color and position, camera matrix and etc.
         //use function glGetUniformLocation(), and glUniform3f, glUniformMatrix4fv to pass your uniform value
+        //Define the object color, light color, light position and view position
         glUniform3f(glGetUniformLocation(lightingShader.Program, "objectColor"), 0.0f,  1.0f,  0.0f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "lightColor"),  1.0f, 1.0f, 1.0f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "lightPosition"), lightPosition.x, lightPosition.y, lightPosition.z);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "viewPosition"), camera.Position.x, camera.Position.y, camera.Position.z);
         
+        //create the window view and projection
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 1.0f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-        
         // Draw the container (using container's vertex attributes)
         glBindVertexArray(containerVAO);
         glm::mat4 model = glm::mat4(1.0);
